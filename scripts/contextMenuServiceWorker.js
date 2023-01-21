@@ -42,6 +42,21 @@ const generateCompletionAction = async (info) => {
 
 	Title:
 	`;
+  const baseCompletion = await generate(`${basePromptPrefix}${selectionText}`);
+
+  // add second prompt
+  const secondPrompt = `
+      Take the table of contents and title of the blog post below and generate a blog post written in thwe style of Paul Graham. Make it feel like a story. Don't just list the points. Go deep into each one. Explain why.
+      
+      Title: ${selectionText}
+      
+      Table of Contents: ${baseCompletion.text}
+      
+      Blog Post:
+      `;
+
+    // Call your second prompt
+    const secondPromptCompletion = await generate(secondPrompt);
   } catch (error) {
     console.log(error);
   }
@@ -51,7 +66,7 @@ const generateCompletionAction = async (info) => {
 chrome.runtime.onInstalled.addListener(() => {
     chrome.contextMenus.create({
       id: 'context-run',
-      title: 'Generate blog post',
+      title: 'Medium Story Generator',
       contexts: ['selection'],
     });
   });
